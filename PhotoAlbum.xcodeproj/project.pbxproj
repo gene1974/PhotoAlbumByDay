@@ -14,6 +14,7 @@
 		639D44642F6E2E05005700D0 /* PhotoAlbumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D44632F6E2E05005700D0 /* PhotoAlbumTests.swift */; };
 		639D446E2F6E2E05005700D0 /* PhotoAlbumUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D446D2F6E2E05005700D0 /* PhotoAlbumUITests.swift */; };
 		639D44702F6E2E05005700D0 /* PhotoAlbumUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D446F2F6E2E05005700D0 /* PhotoAlbumUITestsLaunchTests.swift */; };
+		639D447D2F6E2EED005700D0 /* PhotoLibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D447C2F6E2EED005700D0 /* PhotoLibraryViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		639D44692F6E2E05005700D0 /* PhotoAlbumUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoAlbumUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		639D446D2F6E2E05005700D0 /* PhotoAlbumUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumUITests.swift; sourceTree = "<group>"; };
 		639D446F2F6E2E05005700D0 /* PhotoAlbumUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		639D447C2F6E2EED005700D0 /* PhotoLibraryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 				639D44542F6E2E02005700D0 /* ContentView.swift */,
 				639D44562F6E2E04005700D0 /* Assets.xcassets */,
 				639D44582F6E2E04005700D0 /* Preview Content */,
+				639D447C2F6E2EED005700D0 /* PhotoLibraryViewModel.swift */,
 			);
 			path = PhotoAlbum;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				639D447D2F6E2EED005700D0 /* PhotoLibraryViewModel.swift in Sources */,
 				639D44552F6E2E02005700D0 /* ContentView.swift in Sources */,
 				639D44532F6E2E02005700D0 /* PhotoAlbumApp.swift in Sources */,
 			);
@@ -422,8 +426,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PhotoAlbum/Preview Content\"";
+				DEVELOPMENT_TEAM = 75BH56L2H2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "用于按天浏览和删除照片";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -450,8 +456,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PhotoAlbum/Preview Content\"";
+				DEVELOPMENT_TEAM = 75BH56L2H2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "用于按天浏览和删除照片";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
