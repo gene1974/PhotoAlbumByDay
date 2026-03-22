@@ -653,6 +653,7 @@ private struct AssetPreviewPage: View {
 
         if asset.mediaType == .video {
             isVideo = true
+            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
             let options = PHVideoRequestOptions()
             options.deliveryMode = .highQualityFormat
             options.isNetworkAccessAllowed = true
