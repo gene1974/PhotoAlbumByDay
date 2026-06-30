@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		639D44532F6E2E02005700D0 /* PhotoAlbumApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D44522F6E2E02005700D0 /* PhotoAlbumApp.swift */; };
+		639D44532F6E2E02005700D0 /* MaciPhotoAlbumApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D44522F6E2E02005700D0 /* MaciPhotoAlbumApp.swift */; };
 		639D44552F6E2E02005700D0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D44542F6E2E02005700D0 /* ContentView.swift */; };
 		639D44572F6E2E04005700D0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 639D44562F6E2E04005700D0 /* Assets.xcassets */; };
 		639D445A2F6E2E04005700D0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 639D44592F6E2E04005700D0 /* Preview Assets.xcassets */; };
-		639D44642F6E2E05005700D0 /* PhotoAlbumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D44632F6E2E05005700D0 /* PhotoAlbumTests.swift */; };
-		639D446E2F6E2E05005700D0 /* PhotoAlbumUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D446D2F6E2E05005700D0 /* PhotoAlbumUITests.swift */; };
-		639D44702F6E2E05005700D0 /* PhotoAlbumUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D446F2F6E2E05005700D0 /* PhotoAlbumUITestsLaunchTests.swift */; };
+		639D44642F6E2E05005700D0 /* MaciPhotoAlbumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D44632F6E2E05005700D0 /* MaciPhotoAlbumTests.swift */; };
+		639D446E2F6E2E05005700D0 /* MaciPhotoAlbumUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D446D2F6E2E05005700D0 /* MaciPhotoAlbumUITests.swift */; };
+		639D44702F6E2E05005700D0 /* MaciPhotoAlbumUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D446F2F6E2E05005700D0 /* MaciPhotoAlbumUITestsLaunchTests.swift */; };
 		639D447D2F6E2EED005700D0 /* PhotoLibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639D447C2F6E2EED005700D0 /* PhotoLibraryViewModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -23,28 +23,28 @@
 			containerPortal = 639D44472F6E2E02005700D0 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 639D444E2F6E2E02005700D0;
-			remoteInfo = PhotoAlbum;
+			remoteInfo = MaciPhotoAlbum;
 		};
 		639D446A2F6E2E05005700D0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 639D44472F6E2E02005700D0 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 639D444E2F6E2E02005700D0;
-			remoteInfo = PhotoAlbum;
+			remoteInfo = MaciPhotoAlbum;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		639D444F2F6E2E02005700D0 /* PhotoAlbum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoAlbum.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		639D44522F6E2E02005700D0 /* PhotoAlbumApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumApp.swift; sourceTree = "<group>"; };
+		639D444F2F6E2E02005700D0 /* MaciPhotoAlbum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MaciPhotoAlbum.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		639D44522F6E2E02005700D0 /* MaciPhotoAlbumApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaciPhotoAlbumApp.swift; sourceTree = "<group>"; };
 		639D44542F6E2E02005700D0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		639D44562F6E2E04005700D0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		639D44592F6E2E04005700D0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		639D445F2F6E2E05005700D0 /* PhotoAlbumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoAlbumTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		639D44632F6E2E05005700D0 /* PhotoAlbumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumTests.swift; sourceTree = "<group>"; };
-		639D44692F6E2E05005700D0 /* PhotoAlbumUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotoAlbumUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		639D446D2F6E2E05005700D0 /* PhotoAlbumUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumUITests.swift; sourceTree = "<group>"; };
-		639D446F2F6E2E05005700D0 /* PhotoAlbumUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		639D445F2F6E2E05005700D0 /* MaciPhotoAlbumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MaciPhotoAlbumTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		639D44632F6E2E05005700D0 /* MaciPhotoAlbumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaciPhotoAlbumTests.swift; sourceTree = "<group>"; };
+		639D44692F6E2E05005700D0 /* MaciPhotoAlbumUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MaciPhotoAlbumUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		639D446D2F6E2E05005700D0 /* MaciPhotoAlbumUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaciPhotoAlbumUITests.swift; sourceTree = "<group>"; };
+		639D446F2F6E2E05005700D0 /* MaciPhotoAlbumUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaciPhotoAlbumUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		639D447C2F6E2EED005700D0 /* PhotoLibraryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -76,9 +76,9 @@
 		639D44462F6E2E02005700D0 = {
 			isa = PBXGroup;
 			children = (
-				639D44512F6E2E02005700D0 /* PhotoAlbum */,
-				639D44622F6E2E05005700D0 /* PhotoAlbumTests */,
-				639D446C2F6E2E05005700D0 /* PhotoAlbumUITests */,
+				639D44512F6E2E02005700D0 /* MaciPhotoAlbum */,
+				639D44622F6E2E05005700D0 /* MaciPhotoAlbumTests */,
+				639D446C2F6E2E05005700D0 /* MaciPhotoAlbumUITests */,
 				639D44502F6E2E02005700D0 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,23 +86,23 @@
 		639D44502F6E2E02005700D0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				639D444F2F6E2E02005700D0 /* PhotoAlbum.app */,
-				639D445F2F6E2E05005700D0 /* PhotoAlbumTests.xctest */,
-				639D44692F6E2E05005700D0 /* PhotoAlbumUITests.xctest */,
+				639D444F2F6E2E02005700D0 /* MaciPhotoAlbum.app */,
+				639D445F2F6E2E05005700D0 /* MaciPhotoAlbumTests.xctest */,
+				639D44692F6E2E05005700D0 /* MaciPhotoAlbumUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		639D44512F6E2E02005700D0 /* PhotoAlbum */ = {
+		639D44512F6E2E02005700D0 /* MaciPhotoAlbum */ = {
 			isa = PBXGroup;
 			children = (
-				639D44522F6E2E02005700D0 /* PhotoAlbumApp.swift */,
+				639D44522F6E2E02005700D0 /* MaciPhotoAlbumApp.swift */,
 				639D44542F6E2E02005700D0 /* ContentView.swift */,
 				639D44562F6E2E04005700D0 /* Assets.xcassets */,
 				639D44582F6E2E04005700D0 /* Preview Content */,
 				639D447C2F6E2EED005700D0 /* PhotoLibraryViewModel.swift */,
 			);
-			path = PhotoAlbum;
+			path = MaciPhotoAlbum;
 			sourceTree = "<group>";
 		};
 		639D44582F6E2E04005700D0 /* Preview Content */ = {
@@ -113,29 +113,29 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		639D44622F6E2E05005700D0 /* PhotoAlbumTests */ = {
+		639D44622F6E2E05005700D0 /* MaciPhotoAlbumTests */ = {
 			isa = PBXGroup;
 			children = (
-				639D44632F6E2E05005700D0 /* PhotoAlbumTests.swift */,
+				639D44632F6E2E05005700D0 /* MaciPhotoAlbumTests.swift */,
 			);
-			path = PhotoAlbumTests;
+			path = MaciPhotoAlbumTests;
 			sourceTree = "<group>";
 		};
-		639D446C2F6E2E05005700D0 /* PhotoAlbumUITests */ = {
+		639D446C2F6E2E05005700D0 /* MaciPhotoAlbumUITests */ = {
 			isa = PBXGroup;
 			children = (
-				639D446D2F6E2E05005700D0 /* PhotoAlbumUITests.swift */,
-				639D446F2F6E2E05005700D0 /* PhotoAlbumUITestsLaunchTests.swift */,
+				639D446D2F6E2E05005700D0 /* MaciPhotoAlbumUITests.swift */,
+				639D446F2F6E2E05005700D0 /* MaciPhotoAlbumUITestsLaunchTests.swift */,
 			);
-			path = PhotoAlbumUITests;
+			path = MaciPhotoAlbumUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		639D444E2F6E2E02005700D0 /* PhotoAlbum */ = {
+		639D444E2F6E2E02005700D0 /* MaciPhotoAlbum */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 639D44732F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "PhotoAlbum" */;
+			buildConfigurationList = 639D44732F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "MaciPhotoAlbum" */;
 			buildPhases = (
 				639D444B2F6E2E02005700D0 /* Sources */,
 				639D444C2F6E2E02005700D0 /* Frameworks */,
@@ -145,14 +145,14 @@
 			);
 			dependencies = (
 			);
-			name = PhotoAlbum;
-			productName = PhotoAlbum;
-			productReference = 639D444F2F6E2E02005700D0 /* PhotoAlbum.app */;
+			name = MaciPhotoAlbum;
+			productName = MaciPhotoAlbum;
+			productReference = 639D444F2F6E2E02005700D0 /* MaciPhotoAlbum.app */;
 			productType = "com.apple.product-type.application";
 		};
-		639D445E2F6E2E05005700D0 /* PhotoAlbumTests */ = {
+		639D445E2F6E2E05005700D0 /* MaciPhotoAlbumTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 639D44762F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "PhotoAlbumTests" */;
+			buildConfigurationList = 639D44762F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "MaciPhotoAlbumTests" */;
 			buildPhases = (
 				639D445B2F6E2E05005700D0 /* Sources */,
 				639D445C2F6E2E05005700D0 /* Frameworks */,
@@ -163,14 +163,14 @@
 			dependencies = (
 				639D44612F6E2E05005700D0 /* PBXTargetDependency */,
 			);
-			name = PhotoAlbumTests;
-			productName = PhotoAlbumTests;
-			productReference = 639D445F2F6E2E05005700D0 /* PhotoAlbumTests.xctest */;
+			name = MaciPhotoAlbumTests;
+			productName = MaciPhotoAlbumTests;
+			productReference = 639D445F2F6E2E05005700D0 /* MaciPhotoAlbumTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		639D44682F6E2E05005700D0 /* PhotoAlbumUITests */ = {
+		639D44682F6E2E05005700D0 /* MaciPhotoAlbumUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 639D44792F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "PhotoAlbumUITests" */;
+			buildConfigurationList = 639D44792F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "MaciPhotoAlbumUITests" */;
 			buildPhases = (
 				639D44652F6E2E05005700D0 /* Sources */,
 				639D44662F6E2E05005700D0 /* Frameworks */,
@@ -181,9 +181,9 @@
 			dependencies = (
 				639D446B2F6E2E05005700D0 /* PBXTargetDependency */,
 			);
-			name = PhotoAlbumUITests;
-			productName = PhotoAlbumUITests;
-			productReference = 639D44692F6E2E05005700D0 /* PhotoAlbumUITests.xctest */;
+			name = MaciPhotoAlbumUITests;
+			productName = MaciPhotoAlbumUITests;
+			productReference = 639D44692F6E2E05005700D0 /* MaciPhotoAlbumUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -209,7 +209,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 639D444A2F6E2E02005700D0 /* Build configuration list for PBXProject "PhotoAlbum" */;
+			buildConfigurationList = 639D444A2F6E2E02005700D0 /* Build configuration list for PBXProject "MaciPhotoAlbum" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -222,9 +222,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				639D444E2F6E2E02005700D0 /* PhotoAlbum */,
-				639D445E2F6E2E05005700D0 /* PhotoAlbumTests */,
-				639D44682F6E2E05005700D0 /* PhotoAlbumUITests */,
+				639D444E2F6E2E02005700D0 /* MaciPhotoAlbum */,
+				639D445E2F6E2E05005700D0 /* MaciPhotoAlbumTests */,
+				639D44682F6E2E05005700D0 /* MaciPhotoAlbumUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -262,7 +262,7 @@
 			files = (
 				639D447D2F6E2EED005700D0 /* PhotoLibraryViewModel.swift in Sources */,
 				639D44552F6E2E02005700D0 /* ContentView.swift in Sources */,
-				639D44532F6E2E02005700D0 /* PhotoAlbumApp.swift in Sources */,
+				639D44532F6E2E02005700D0 /* MaciPhotoAlbumApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,7 +270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				639D44642F6E2E05005700D0 /* PhotoAlbumTests.swift in Sources */,
+				639D44642F6E2E05005700D0 /* MaciPhotoAlbumTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,8 +278,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				639D446E2F6E2E05005700D0 /* PhotoAlbumUITests.swift in Sources */,
-				639D44702F6E2E05005700D0 /* PhotoAlbumUITestsLaunchTests.swift in Sources */,
+				639D446E2F6E2E05005700D0 /* MaciPhotoAlbumUITests.swift in Sources */,
+				639D44702F6E2E05005700D0 /* MaciPhotoAlbumUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,12 +288,12 @@
 /* Begin PBXTargetDependency section */
 		639D44612F6E2E05005700D0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 639D444E2F6E2E02005700D0 /* PhotoAlbum */;
+			target = 639D444E2F6E2E02005700D0 /* MaciPhotoAlbum */;
 			targetProxy = 639D44602F6E2E05005700D0 /* PBXContainerItemProxy */;
 		};
 		639D446B2F6E2E05005700D0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 639D444E2F6E2E02005700D0 /* PhotoAlbum */;
+			target = 639D444E2F6E2E02005700D0 /* MaciPhotoAlbum */;
 			targetProxy = 639D446A2F6E2E05005700D0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -351,12 +351,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
+				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -408,11 +408,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				SDKROOT = iphoneos;
+				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -425,26 +425,25 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PhotoAlbum/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MaciPhotoAlbum/Preview Content\"";
 				DEVELOPMENT_TEAM = 75BH56L2H2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "用于按天浏览和删除照片";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_CFBundleDisplayName = MaciPhotoAlbum;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
+				INFOPLIST_KEY_NSCameraUsageDescription = "MaciPhotoAlbum 需要访问已连接的 iPhone 才能读取和管理其中的照片与视频。";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = gene.PhotoAlbum;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = gene.MaciPhotoAlbum;
+				PRODUCT_NAME = MaciPhotoAlbum;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -455,26 +454,25 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PhotoAlbum/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MaciPhotoAlbum/Preview Content\"";
 				DEVELOPMENT_TEAM = 75BH56L2H2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "用于按天浏览和删除照片";
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_CFBundleDisplayName = MaciPhotoAlbum;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
+				INFOPLIST_KEY_NSCameraUsageDescription = "MaciPhotoAlbum 需要访问已连接的 iPhone 才能读取和管理其中的照片与视频。";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = gene.PhotoAlbum;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = gene.MaciPhotoAlbum;
+				PRODUCT_NAME = MaciPhotoAlbum;
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -486,14 +484,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = gene.PhotoAlbumTests;
+				PRODUCT_BUNDLE_IDENTIFIER = gene.MaciPhotoAlbumTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhotoAlbum.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhotoAlbum";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MaciPhotoAlbum.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MaciPhotoAlbum";
 			};
 			name = Debug;
 		};
@@ -505,14 +504,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = gene.PhotoAlbumTests;
+				PRODUCT_BUNDLE_IDENTIFIER = gene.MaciPhotoAlbumTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PhotoAlbum.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PhotoAlbum";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MaciPhotoAlbum.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MaciPhotoAlbum";
 			};
 			name = Release;
 		};
@@ -523,13 +523,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = gene.PhotoAlbumUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = gene.MaciPhotoAlbumUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = PhotoAlbum;
+				TEST_TARGET_NAME = MaciPhotoAlbum;
 			};
 			name = Debug;
 		};
@@ -540,20 +542,22 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = gene.PhotoAlbumUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = gene.MaciPhotoAlbumUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = PhotoAlbum;
+				TEST_TARGET_NAME = MaciPhotoAlbum;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		639D444A2F6E2E02005700D0 /* Build configuration list for PBXProject "PhotoAlbum" */ = {
+		639D444A2F6E2E02005700D0 /* Build configuration list for PBXProject "MaciPhotoAlbum" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				639D44712F6E2E05005700D0 /* Debug */,
@@ -562,7 +566,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		639D44732F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "PhotoAlbum" */ = {
+		639D44732F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "MaciPhotoAlbum" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				639D44742F6E2E05005700D0 /* Debug */,
@@ -571,7 +575,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		639D44762F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "PhotoAlbumTests" */ = {
+		639D44762F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "MaciPhotoAlbumTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				639D44772F6E2E05005700D0 /* Debug */,
@@ -580,7 +584,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		639D44792F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "PhotoAlbumUITests" */ = {
+		639D44792F6E2E05005700D0 /* Build configuration list for PBXNativeTarget "MaciPhotoAlbumUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				639D447A2F6E2E05005700D0 /* Debug */,

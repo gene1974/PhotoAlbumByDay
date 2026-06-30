@@ -1,26 +1,50 @@
-# PhotoAlbum — CLAUDE.md
+# MaciPhotoAlbum — CLAUDE.md
 
 ## 项目概述
 
-iOS 相册 App，名称 **Daily Media**。以日期分栏展示设备相册中的照片和视频，支持多选批量删除、全屏预览、拖拽选择等功能。
+**macOS** App，名称 **MaciPhotoAlbum**。通过数据线读取已连接 iPhone（或其它相机设备）相册中的照片和视频，以拍摄日期分栏展示，支持全屏预览、多选、拖拽选择、批量删除。
 
 - **开发者**：Yingzhuo Huang
 - **创建日期**：2026/3/21
-- **平台**：iOS，SwiftUI + PhotoKit (Photos framework) + AVKit
-- **开发环境**：macOS 14 + Xcode 15（iOS 17 SDK）；运行设备：**iOS 26.3**
-- **重要**：所有功能必须在 iOS 26.3 真机上可用，iOS 26 对 SwiftUI/UIKit 手势交互有较大变化
+- **平台**：macOS，SwiftUI + **ImageCaptureCore**（`ICDeviceBrowser` / `ICCameraDevice` / `ICCameraFile`）+ AVKit
+- **开发环境**：macOS 14 + Xcode 15
+- **部署目标**：`MACOSX_DEPLOYMENT_TARGET = 14.0`，`SDKROOT = macosx`
+- **重要**：不是 PhotoKit。读取的是“连接的外部相机设备”，删除直接作用于 iPhone 上的原始文件，无系统“最近删除”兜底——删除前务必确认设备已解锁。
 
 ---
 
 ## 文件结构
 
 ```
-PhotoAlbum/
-├── PhotoAlbumApp.swift          # App 入口 (@main)
-├── ContentView.swift            # 主界面 & 所有子 View
-├── PhotoLibraryViewModel.swift  # 业务逻辑 & 数据层
-└── Assets.xcassets/             # 图标等资源
+MaciPhotoAlbum/
+├── MaciPhotoAlbumApp.swift        # App 入口 (@main)，WindowGroup
+├── ContentView.swift              # 主界面 & 所有子 View
+├── PhotoLibraryViewModel.swift    # 业务逻辑 & ImageCaptureCore 数据层
+└── Assets.xcassets/               # 图标等资源
 ```
+
+---
+
+## 项目配置（重要）
+
+- `GENERATE_INFOPLIST_FILE = YES`——无手写 Info.plist，键值通过 `INFOPLIST_KEY_*` 注入。
+- **未启用 App Sandbox**，无 `.entitlements` 文件。ImageCaptureCore 访问 USB 设备在非沙盒下可直接工作；若后续开启沙盒，需添加相应 entitlement，否则设备枚举会失败。
+- `LSApplicationCategoryType = public.app-category.photography`。
+
+---
+
+## 构建
+
+命令行构建(`xcode-select` 已指向 `/Applications/Xcode.app`,直接用即可)：
+
+```
+cd /Users/huang/Documents/Xcode/MaciPhotoAlbum
+xcodebuild -project MaciPhotoAlbum.xcodeproj -scheme MaciPhotoAlbum -destination 'platform=macOS' build
+```
+
+- 若 `xcode-select -p` 指回了 Command Line Tools，临时绕过(无需改全局)：
+  在命令前加 `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`。
+- 成功标志：输出末尾 `** BUILD SUCCEEDED **`。
 
 ---
 
@@ -28,113 +52,126 @@ PhotoAlbum/
 
 ### 数据层：`PhotoLibraryViewModel`
 
-`@MainActor final class`，`ObservableObject`，负责：
+`@MainActor final class`，继承 `NSObject`，`ObservableObject`。同时实现
+`ICDeviceBrowserDelegate` 与 `ICCameraDeviceDelegate`（delegate 回调均为
+`nonisolated`，内部用 `Task { @MainActor }` 切回主线程）。
 
-- **资产加载**：`reloadAssets()` 通过 `PHFetchOptions`（按 creationDate 降序）拉取全量相册，按日历天分组为 `[DaySection]`。
-- **数据模型**：
-  - `DaySection`：`{ date: Date, assetIDs: [String] }`，以 `startOfDay` 作为 key。
-  - `AssetInfo`：`{ mediaType: PHAssetMediaType, byteSize: Int64? }`，byteSize 懒加载。
-  - 资产 ID 使用 `PHAsset.localIdentifier`（String）作为全局稳定标识符。
-- **缩略图预热**：`PHCachingImageManager`，以当前可见资产为中心，前后各 24 个（radius=24）。
-- **文件大小**：`PHAssetResource` + `requestData` 读取字节数，滚动期间延迟，停止滚动 0.25s 后批量触发。
-- **选择状态**：`Set<String> selectedAssetIDs`。
-- **删除**：`PHPhotoLibrary.performChanges` + `PHAssetChangeRequest.deleteAssets`，删后进系统"最近删除"。
-- **实时更新**：注册 `PHPhotoLibraryChangeObserver`，库变化时调用 `reloadAssets()`。
+职责：
+
+- **设备发现**：`ICDeviceBrowser`，`browsedDeviceTypeMask` = camera + local，
+  `start()` 启动浏览，`didAdd/didRemove` 维护 `cameraByID`。
+- **会话管理**：选中设备后 `requestOpenSession`（带
+  `.enumerationChronologicalOrder`）。`deinit` 中关闭 session 与 browser。
+- **资产模型**：
+  - `DaySection`：`{ date: Date, assetIDs: [String] }`，以 `startOfDay` 为 key。
+  - `CameraDeviceSummary`：侧栏设备行的展示模型（名称/型号/锁定/读取进度/数量）。
+  - `MediaKind`：`image / video / other`。
+  - 资产 ID = `itemID(for:)`：优先 `originatingAssetID`，否则用
+    `ptpObjectHandle + 文件名 + 大小 + 时间戳` 组合（无 PHAsset.localIdentifier）。
+  - 媒体对象为 `ICCameraFile`，存于 `itemByID`。
+- **分组**：`rebuildSections(from:)` 过滤受支持媒体（image/video），按拍摄日期
+  （`exifCreationDate → fileCreationDate → creationDate → modificationDate`）
+  分天，section 按日期降序，section 内按时间降序、同时间按 ID 降序。
+- **缩略图**：`item.requestThumbnailData(options:)` 按目标像素请求，缓存
+  `thumbnailByID`；也接收 delegate 推送的 `didReceiveThumbnail`。
+- **预览**：`item.requestDownload(options:)` 下载到
+  `temporaryDirectory/MaciPhotoAlbumPreview/`，返回本地 URL 缓存于
+  `previewURLByID`。图片用 `NSImage(contentsOf:)`，视频用 `AVPlayer(url:)`。
+- **选择状态**：`Set<String> selectedAssetIDs`，单选/批量/全天选择。
+- **删除**：`camera.requestDeleteFiles(_:)`，按 `result[.successful]` 从选择集
+  移除，完成后 `rebuildSections`。需设备具备
+  `cameraDeviceCanDeleteOneFile/AllFiles` 能力（见 `canDelete`）。
+- **状态文本**：`statusText` 驱动侧栏底部与空态提示。
 
 ### 视图层：`ContentView.swift`
 
-所有 View 均在此文件内（private structs/classes）：
+所有 View 均在此文件内（private structs）：
 
 | 组件 | 说明 |
 |------|------|
-| `ContentView` | 根视图，NavigationStack + ScrollViewReader |
-| `AssetThumbnailView` | 单个缩略图格子，含选中指示器和文件大小标签 |
-| `AssetPreviewPagerScreen` | 全屏预览，TabView 横向翻页 |
-| `AssetPreviewPage` | 单张预览页，图片用 `ZoomableImageView`，视频用 `AVKit.VideoPlayer` |
-| `DownwardDismissHandler` | UIViewRepresentable，将下滑退出手势安装在 UIWindow 上 |
-| `ZoomScrollView` | UIScrollView 子类，处理照片缩放与平移（见下方 iOS 26 说明） |
-| `ZoomableImageView` | UIViewRepresentable，包装 ZoomScrollView |
+| `ContentView` | 根视图，`NavigationSplitView`（侧栏设备列表 + detail 日期网格） |
+| `AssetThumbnailView` | 缩略图格子，含选中圆圈、文件名、媒体标签、视频角标 |
+| `AssetPreviewSheet` | `sheet` 弹出的预览窗，loading/image/video/failed 四态 |
+
+辅助类型：`DragSelectionMode` / `DragAxisLock` / `AssetFramePreferenceKey`
+（PreferenceKey 收集每格 rect 用于拖拽命中）/ `PreviewRequest`（Identifiable）。
 
 ---
 
 ## 核心功能
 
-### 交互模式（单一模式）
+### 布局
 
-无 browse/select 切换（已废弃，原因：iOS 26 SwiftUI ScrollView 切换状态时滚动位置无法保持）：
-- **点击照片主体** → 全屏预览
-- **点击右上角选择圆圈** → 切换选中/取消选中
-- **水平拖拽** → 拖拽多选
-- 选择指示器始终显示；选中数 > 0 时 toolbar 显示删除按钮
+- `NavigationSplitView`：左侧 `List` 显示已连接设备（图标区分锁定态），
+  右侧为日期分栏的 `LazyVGrid`（`GridItem(.adaptive(minimum:112,maximum:170))`）。
+- 三种 detail 状态：未选设备 → `emptyDeviceView`；无媒体 → `emptyMediaView`；
+  有数据 → `photoGrid`。
+- toolbar：principal 处为标题按钮（点击滚到顶部），右侧为刷新、取消选中、
+  删除（带计数，受 `canDelete` 约束）。
+
+### 交互
+
+- **点击缩略图主体** → `sheet` 全屏预览（`previewRequest`）。
+- **点击右上角圆圈** → 切换选中。
+- **水平拖拽** → 拖拽多选（横向位移 > 纵向时触发）。
 
 ### 拖拽多选
 
-- 水平拖拽（横向位移 > 纵向）触发拖拽选择，锁定轴向后批量选/取消选。
-- `dragAxisLock` 确保同一拖拽手势不切换方向。
-- `AssetFramePreferenceKey` 通过 PreferenceKey 收集每个资产的坐标 rect，用于命中检测。
+- `DragGesture(minimumDistance:12, coordinateSpace:.named("mediaScrollSpace"))`。
+- `dragAxisLock` 锁定轴向，避免同一手势中途切方向；仅横向触发选择。
+- 首个命中格决定本次是 `.select` 还是 `.deselect`，`dragVisitedAssetIDs` 去重。
+- `AssetFramePreferenceKey` 收集每格 rect，`assetID(at:)` 做命中检测。
 
 ### 按天分组
 
-- 网格标题格式：`yyyy年M月d日 EEEE`（中文，Gregorian 历）。
-- 每个 section 右侧有"全选当天"/"取消当天"按钮，始终显示。
+- 标题格式：`yyyy年M月d日 EEEE`（中文，Gregorian 历），后跟当天数量。
+- 每个 section 右侧有“全选当天 / 取消当天”按钮。
 
-### 全屏预览
+### 预览（`AssetPreviewSheet`）
 
-- `fullScreenCover` 展示 `AssetPreviewPagerScreen`。
-- `TabView(.page)` 左右翻页，`selection: $currentAssetID` 绑定当前页。
-- 下滑退出：`DownwardDismissHandler`（UIViewRepresentable）。
-- 图片：`ZoomScrollView` 捏合缩放 1x–4x，双击 2x 放大/还原，缩放后可拖拽平移。
-- 视频：`PHImageManager.requestPlayerItem` + `AVPlayer`，页面出现时自动播放，消失时暂停。
-  - ⚠️ 当前未配置 `AVAudioSession`，静音模式下无声音。
+- 通过 `requestPreviewURL` 下载原文件到临时目录后展示。
+- 图片：`NSImage` + `scaledToFit`。
+- 视频：`AVKit.VideoPlayer`，出现时 `play()`，消失时 `pause()`。
+- 头部显示文件名、媒体标签、分辨率（`dimensionsText`）。
 
 ---
 
-## iOS 26 手势架构（重要）
+## 删除流程（重要）
 
-iOS 26 的 SwiftUI/UIKit 手势交互与早期版本有显著差异，以下是已知问题和解决方案：
+1. 选中项 > 0 时 toolbar 出现“删除(N)”。
+2. `confirmationDialog` 二次确认，文案提示“直接从设备移除，需 iPhone 已解锁”。
+3. `requestDeleteFiles` 执行，按结果字典区分 `.successful` / `.failed`。
+4. 失败时 `alert("删除失败")` 显示 `statusText`。
+5. **无系统回收站**——删除不可撤销。
 
-### 问题1：TabView 翻页失效
-
-**原因**：SwiftUI overlay 产生的容器 UIView 默认 `isUserInteractionEnabled = true`，在 hit-test 时返回自身，TabView 内部的 UIScrollView（兄弟节点）收不到 touch 事件。即使在 overlay UIView 上设 `isUserInteractionEnabled = false`，容器本身仍然拦截。
-
-**解决方案**（两层）：
-1. overlay 加 `.allowsHitTesting(false)` → SwiftUI 将容器 UIView 设为 `isUserInteractionEnabled = false`，touch 穿透。
-2. `ZoomScrollView.gestureRecognizerShouldBegin` → zoom=1 时横向 pan 直接 fail，UIKit nested-scroll 让父级 TabView 接管。
-
-### 问题2：ZoomScrollView 初始显示放大
-
-**原因**：`updateUIView` 在 UIKit layout 前调用（bounds=zero），`layoutSize` guard 记录后不再被调用，imageView.frame 永久为 zero，图片以原始分辨率显示。
-
-**解决方案**：改用 `layoutSubviews` override 设置布局，UIKit 在 bounds 确定后自动调用，时机可靠。
-
-### 问题3：下滑退出与 TabView 手势冲突
-
-**原因**：将 `UIPanGestureRecognizer` 挂在覆盖层 UIView 上时，对横向 swipe 的 `gestureRecognizerShouldBegin` 返回 false，但 TabView 的 UIScrollView 作为兄弟节点从未收到 touch，翻页仍失效。
-
-**解决方案**：`DownwardDismissHandler` 的 `AnchorView`（`isUserInteractionEnabled = false`）通过 `didMoveToWindow` 将手势安装在 UIWindow。Window 级别手势绕过 hit-test，能看到所有 touch，且对横向 swipe 主动 fail，不干扰翻页。
+`canDelete` 前置条件：有选中、未在删除中、设备存在、未锁定、未受访问限制、
+且设备 capabilities 含删除能力。
 
 ---
 
 ## 语言混用规则
 
-- **中文 UI**：删除、清空、全选当天、取消当天、计算中...、视频、加载失败、管理访问、取消选中
-- **英文 UI**：导航标题 "Daily Media"、权限说明文字、`ContentUnavailableView` 内容
-- **错误弹窗**："删除失败" / "好的"（中文）
+- **中文 UI**：刷新、取消选中、删除、全选当天、取消当天、视频、加载失败、
+  设备、各类状态/错误文案。
+- **英文 UI**：导航标题 "MaciPhotoAlbum"、`ContentUnavailableView` 内容
+  （"No iPhone connected" / "No media found" 及其说明）。
+- **错误弹窗**：“删除失败” / “好的”。
 
 ---
 
-## 权限
+## 性能与约定
 
-- 需要 `NSPhotoLibraryUsageDescription`（读写权限 `.readWrite`）。
-- `hasReadAccess` = `.authorized` 或 `.limited`。
-- 无权限时显示引导页，用户点击后调用 `PHPhotoLibrary.requestAuthorization`。
-- limited 权限时 toolbar 显示"管理访问"按钮，跳转到系统设置（`openAppSettings()`）。
+- 缩略图按格子实际像素尺寸请求（`targetPixelSize`，随 backingScaleFactor 计算，
+  变化 ≥12pt 才重算），最小 160px。
+- 预览/原图按需下载到临时目录并缓存 URL，重复打开复用。
+- delegate 回调全部 `nonisolated` + `Task { @MainActor }`，状态变更只在主线程。
+- `rebuildSections` 时清理 `itemByID` 之外的孤立缓存（缩略图、预览 URL、选择集）。
 
 ---
 
-## 性能约定
+## 已知限制 / 待办
 
-- 缩略图请求：`deliveryMode = .opportunistic`，`resizeMode = .fast`。
-- 全屏图片：`deliveryMode = .highQualityFormat`，`resizeMode = .exact`。
-- 文件大小：`PHAssetResourceManager.requestData` 累加字节数；滚动期间 defer，停止 0.25s 后 flush。
-- 预热窗口变化阈值：中心索引偏移 ≥ 10 或 targetSize 变化 > 24pt 才重算。
+- 视频预览音频未单独配置（沿用系统默认），一般 Mac 上有声音。
+- 仅支持 image/video，其它类型（如 RAW sidecar、文档）被过滤。
+- 未实现导出/下载到本地相册功能（仅预览时落临时目录）。
+- 多设备并发未充分测试；同一时刻聚焦单一选中设备。

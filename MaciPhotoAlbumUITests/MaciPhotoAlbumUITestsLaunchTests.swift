@@ -1,13 +1,13 @@
 //
-//  PhotoAlbumUITestsLaunchTests.swift
-//  PhotoAlbumUITests
+//  MaciPhotoAlbumUITestsLaunchTests.swift
+//  MaciPhotoAlbumUITests
 //
 //  Created by Yingzhuo Huang on 2026/3/21.
 //
 
 import XCTest
 
-final class PhotoAlbumUITestsLaunchTests: XCTestCase {
+final class MaciPhotoAlbumUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

@@ -1,13 +1,13 @@
 //
-//  PhotoAlbumUITests.swift
-//  PhotoAlbumUITests
+//  MaciPhotoAlbumUITests.swift
+//  MaciPhotoAlbumUITests
 //
 //  Created by Yingzhuo Huang on 2026/3/21.
 //
 
 import XCTest
 
-final class PhotoAlbumUITests: XCTestCase {
+final class MaciPhotoAlbumUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
