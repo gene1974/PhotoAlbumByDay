@@ -98,9 +98,12 @@ final class PhotoLibraryViewModel: NSObject, ObservableObject {
         orderedAssetIDs.first
     }
 
-    var canDelete: Bool {
-        guard !selectedAssetIDs.isEmpty,
-              !isDeleting,
+    /// Whether the connected device can delete at all right now — unlocked,
+    /// trusted, idle, and reporting a delete capability. Independent of what is
+    /// selected, so both the toolbar (multi-select) and the preview (single
+    /// item) can gate on it.
+    var canDeleteFromDevice: Bool {
+        guard !isDeleting,
               let camera = selectedCamera,
               !camera.isLocked,
               !camera.isAccessRestrictedAppleDevice else {
@@ -109,6 +112,10 @@ final class PhotoLibraryViewModel: NSObject, ObservableObject {
 
         return camera.capabilities.contains(ICDeviceCapability.cameraDeviceCanDeleteOneFile.rawValue)
             || camera.capabilities.contains(ICDeviceCapability.cameraDeviceCanDeleteAllFiles.rawValue)
+    }
+
+    var canDelete: Bool {
+        !selectedAssetIDs.isEmpty && canDeleteFromDevice
     }
 
     var canExport: Bool {
@@ -287,6 +294,32 @@ final class PhotoLibraryViewModel: NSObject, ObservableObject {
         }
     }
 
+    /// Copies the item to the general pasteboard. Downloads the original first
+    /// (reusing the preview cache), then writes the file URL — plus the decoded
+    /// image for photos — so both file pastes (Finder/Mail) and image-content
+    /// pastes work. Videos are copied as a file reference only.
+    func copyAsset(id: String, completion: @escaping (Bool) -> Void = { _ in }) {
+        statusText = "正在复制..."
+        requestPreviewURL(for: id) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let url):
+                let pasteboard = NSPasteboard.general
+                pasteboard.clearContents()
+                var objects: [NSPasteboardWriting] = [url as NSURL]
+                if self.mediaKind(for: id) != .video, let image = NSImage(contentsOf: url) {
+                    objects.append(image)
+                }
+                let ok = pasteboard.writeObjects(objects)
+                self.statusText = ok ? "已复制到剪贴板。" : "复制失败。"
+                completion(ok)
+            case .failure(let error):
+                self.statusText = "复制失败：\(error.localizedDescription)"
+                completion(false)
+            }
+        }
+    }
+
     func setSelection(_ isSelected: Bool, for id: String) {
         if isSelected {
             selectedAssetIDs.insert(id)
@@ -391,12 +424,20 @@ final class PhotoLibraryViewModel: NSObject, ObservableObject {
 
 
     func deleteSelected(completion: @escaping (Bool) -> Void) {
+        deleteAssets(Array(selectedAssetIDs), completion: completion)
+    }
+
+    /// Hard-deletes the given items from the device (no recycle bin). Used by
+    /// both the toolbar multi-delete and the single-item delete in the preview.
+    /// Successfully removed IDs are dropped from the selection and the sections
+    /// are rebuilt.
+    func deleteAssets(_ ids: [String], completion: @escaping (Bool) -> Void) {
         guard let camera = selectedCamera else {
             completion(false)
             return
         }
 
-        let idsToDelete = selectedAssetIDs
+        let idsToDelete = Set(ids)
         let itemsToDelete = orderedAssetIDs
             .filter { idsToDelete.contains($0) }
             .compactMap { itemByID[$0] }
@@ -481,6 +522,10 @@ final class PhotoLibraryViewModel: NSObject, ObservableObject {
         let files = (camera.mediaFiles ?? [])
             .compactMap { $0 as? ICCameraFile }
             .filter(Self.isSupportedMedia)
+
+        #if DEBUG
+        Self.logLivePhotoDiagnostics(camera: camera)
+        #endif
 
         var nextItemByID: [String: ICCameraFile] = [:]
         var rows: [AssetRow] = []
@@ -602,6 +647,40 @@ final class PhotoLibraryViewModel: NSObject, ObservableObject {
             refreshSelectedDevice()
         }
     }
+
+    #if DEBUG
+    /// TEMP diagnostics for Live Photo support. Logs (via NSLog, visible in
+    /// Xcode console / Console.app under prefix "LIVEPHOTO-DIAG") every file
+    /// named like IMG_6544, plus whether Live Photos share one originatingAssetID
+    /// across their still + motion parts. Remove once the pairing strategy is set.
+    private static var didLogLivePhotoDiagnostics = false
+    private static func logLivePhotoDiagnostics(camera: ICCameraDevice) {
+        guard !didLogLivePhotoDiagnostics else { return }
+        let all = (camera.mediaFiles ?? []).compactMap { $0 as? ICCameraFile }
+        guard !all.isEmpty else { return }
+        didLogLivePhotoDiagnostics = true
+
+        for f in all where (f.originalFilename ?? f.name ?? "").localizedCaseInsensitiveContains("6544") {
+            let line = "LIVEPHOTO-DIAG file"
+                + " name=\(f.originalFilename ?? f.name ?? "?")"
+                + " uti=\(f.uti ?? "?")"
+                + " assetID=\(f.originatingAssetID ?? "nil")"
+                + " pairedRaw=\(f.pairedRawImage != nil)"
+                + " size=\(f.fileSize)"
+                + " handle=\(f.ptpObjectHandle)"
+            NSLog("%@", line)
+        }
+
+        // Do Live Photos expose the same originatingAssetID for both components?
+        let withID = all.filter { !($0.originatingAssetID ?? "").isEmpty }
+        let grouped = Dictionary(grouping: withID) { $0.originatingAssetID! }
+        let multi = grouped.filter { $0.value.count > 1 }
+        let sample = multi.prefix(3).map { key, group in
+            "\(key)->[" + group.map { $0.originalFilename ?? $0.name ?? "?" }.joined(separator: ",") + "]"
+        }
+        NSLog("%@", "LIVEPHOTO-DIAG totalFiles=\(all.count) withAssetID=\(withID.count) sharedAssetIDGroups=\(multi.count) sample=\(sample)")
+    }
+    #endif
 
     private static func deviceID(for device: ICDevice) -> String {
         device.uuidString ?? device.persistentIDString ?? device.name ?? "\(ObjectIdentifier(device))"

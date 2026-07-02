@@ -525,6 +525,13 @@ private struct AssetThumbnailView: View {
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
         }
+        .contextMenu {
+            Button {
+                viewModel.copyAsset(id: assetID)
+            } label: {
+                Label("复制", systemImage: "doc.on.doc")
+            }
+        }
         .background {
             GeometryReader { geometry in
                 Color.clear
@@ -564,6 +571,8 @@ private struct AssetPreviewSheet: View {
     @State private var assetID: String
     @State private var phase: PreviewPhase = .loading
     @State private var zoomIndex = 0
+    @State private var showingDeleteConfirm = false
+    @State private var deleteErrorMessage: String?
     @FocusState private var focused: Bool
 
     // zoom=1.0 等同“适应窗口”，作为最小档；其余为放大倍数。
@@ -602,6 +611,26 @@ private struct AssetPreviewSheet: View {
             zoomIndex = 0
             loadPreview()
         }
+        .confirmationDialog(
+            "删除这一项？",
+            isPresented: $showingDeleteConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("删除", role: .destructive) { deleteCurrent() }
+        } message: {
+            Text("删除会直接从已连接设备中移除，无法恢复，操作前请确认 iPhone 已解锁。")
+        }
+        .alert(
+            "删除失败",
+            isPresented: Binding(
+                get: { deleteErrorMessage != nil },
+                set: { if !$0 { deleteErrorMessage = nil } }
+            )
+        ) {
+            Button("好的", role: .cancel) {}
+        } message: {
+            Text(deleteErrorMessage ?? "")
+        }
     }
 
     private var header: some View {
@@ -637,6 +666,14 @@ private struct AssetPreviewSheet: View {
                 Image(systemName: "plus.magnifyingglass")
             }.disabled(!isImage || zoomIndex == zoomLevels.count - 1).help("放大 (+)")
 
+            Divider().frame(height: 16)
+
+            Button(role: .destructive) { showingDeleteConfirm = true } label: {
+                Label("删除", systemImage: "trash")
+            }
+            .disabled(!viewModel.canDeleteFromDevice)
+            .help("从设备删除这一项")
+
             Button { dismiss() } label: {
                 Label("关闭", systemImage: "xmark.circle.fill")
             }
@@ -668,6 +705,13 @@ private struct AssetPreviewSheet: View {
                 Text(message).foregroundStyle(.white).padding()
             }
         }
+        .contextMenu {
+            Button {
+                viewModel.copyAsset(id: assetID)
+            } label: {
+                Label("复制", systemImage: "doc.on.doc")
+            }
+        }
     }
 
     private func handleKey(_ press: KeyPress) -> KeyPress.Result {
@@ -686,6 +730,32 @@ private struct AssetPreviewSheet: View {
     private func goToNext() {
         guard let i = currentIndex, i < orderedIDs.count - 1 else { return }
         assetID = orderedIDs[i + 1]
+    }
+
+    /// Deletes the item currently shown. The neighbour to fall back to is
+    /// captured *before* deletion (the ordering rebuilds afterwards): prefer the
+    /// next item, else the previous one, else close the sheet when it was the
+    /// last item.
+    private func deleteCurrent() {
+        let deletingID = assetID
+        let neighbour: String? = {
+            guard let i = currentIndex else { return nil }
+            if i + 1 < orderedIDs.count { return orderedIDs[i + 1] }
+            if i - 1 >= 0 { return orderedIDs[i - 1] }
+            return nil
+        }()
+
+        viewModel.deleteAssets([deletingID]) { success in
+            guard success else {
+                deleteErrorMessage = viewModel.statusText
+                return
+            }
+            if let neighbour {
+                assetID = neighbour
+            } else {
+                dismiss()
+            }
+        }
     }
 
     private func zoomIn() {
