@@ -45,6 +45,7 @@ struct ContentView: View {
     @State private var lastDragLocation: CGPoint?
     @State private var previewRequest: PreviewRequest?
     @State private var gridZoomIndex = 0
+    @State private var jumpDate = Date()
 
     // 缩略图整体缩放档位，作用于格子最小/最大宽度。当前(112–170)为最小档。
     private let gridZoomScales: [CGFloat] = [1.0, 1.4, 1.9, 2.6]
@@ -115,6 +116,8 @@ struct ContentView: View {
                             }
                             .help("按天排序方式（每天内部仍按拍摄时间）")
 
+                            datePickerControl
+
                             Button {
                                 gridZoomIndex = max(gridZoomIndex - 1, 0)
                             } label: {
@@ -184,6 +187,9 @@ struct ContentView: View {
                 }
                 .onChange(of: viewModel.orderedAssetIDs) { _, ids in
                     handleOrderedIDsChanged(ids, proxy: proxy)
+                }
+                .onChange(of: jumpDate) { _, date in
+                    jumpToDate(date, proxy: proxy)
                 }
             }
         }
@@ -268,6 +274,18 @@ struct ContentView: View {
                                 .foregroundStyle(.secondary)
 
                             Spacer(minLength: 0)
+
+                            let bySize = viewModel.isDaySortedBySize(section.date)
+                            Button {
+                                viewModel.toggleDaySizeSort(for: section.date)
+                            } label: {
+                                Label(
+                                    bySize ? "按时间" : "按大小",
+                                    systemImage: bySize ? "clock" : "arrow.down.circle"
+                                )
+                            }
+                            .controlSize(.small)
+                            .help(bySize ? "改回按拍摄时间" : "当天内按大小排序（大→小）")
 
                             let isAllSelected = isSectionFullySelected(section)
                             Button(isAllSelected ? "取消当天" : "全选当天") {
@@ -403,6 +421,28 @@ struct ContentView: View {
             } else {
                 Label(title, systemImage: systemImage)
             }
+        }
+    }
+
+    @ViewBuilder
+    private var datePickerControl: some View {
+        let picker = Group {
+            if let range = viewModel.loadedDateRange {
+                DatePicker("跳转到日期", selection: $jumpDate, in: range, displayedComponents: .date)
+            } else {
+                DatePicker("跳转到日期", selection: $jumpDate, displayedComponents: .date)
+            }
+        }
+        picker
+            .datePickerStyle(.compact)
+            .labelsHidden()
+            .help("跳转到指定日期（就近）")
+    }
+
+    private func jumpToDate(_ date: Date, proxy: ScrollViewProxy) {
+        guard let anchorID = viewModel.anchorAssetID(forDay: date) else { return }
+        withAnimation(.easeInOut(duration: 0.25)) {
+            proxy.scrollTo(anchorID, anchor: .top)
         }
     }
 

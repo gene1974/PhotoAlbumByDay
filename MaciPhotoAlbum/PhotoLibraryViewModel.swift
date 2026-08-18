@@ -75,6 +75,11 @@ final class PhotoLibraryViewModel: NSObject, ObservableObject {
     private var previewURLByID: [String: URL] = [:]
     private var rebuildTask: Task<Void, Never>?
 
+    /// Per-day override for in-day ordering, keyed by `startOfDay`. `true` =
+    /// sort that day by size (large→small); absent/`false` = default by time.
+    /// Independent of the global day-level `sortOrder`.
+    private var daySortedBySize: [Date: Bool] = [:]
+
     private let byteFormatter: ByteCountFormatter = {
         let formatter = ByteCountFormatter()
         formatter.allowedUnits = [.useKB, .useMB, .useGB]
@@ -96,6 +101,26 @@ final class PhotoLibraryViewModel: NSObject, ObservableObject {
 
     var firstAssetID: String? {
         orderedAssetIDs.first
+    }
+
+    /// The span of days that actually have media, for constraining a date
+    /// picker. nil when there is nothing loaded.
+    var loadedDateRange: ClosedRange<Date>? {
+        let days = sections.map(\.date)
+        guard let low = days.min(), let high = days.max() else { return nil }
+        return low...high
+    }
+
+    /// Scroll anchor for "jump to date": the first asset of the day closest to
+    /// `date` (by absolute distance, so an empty exact day still lands nearby).
+    /// Uses each section's `date` field, so it works regardless of the current
+    /// sort order. nil when there are no sections.
+    func anchorAssetID(forDay date: Date) -> String? {
+        let target = Calendar.current.startOfDay(for: date)
+        let nearest = sections.min {
+            abs($0.date.timeIntervalSince(target)) < abs($1.date.timeIntervalSince(target))
+        }
+        return nearest?.assetIDs.first
     }
 
     /// Whether the connected device can delete at all right now — unlocked,
@@ -546,8 +571,12 @@ final class PhotoLibraryViewModel: NSObject, ObservableObject {
             calendar.startOfDay(for: row.date)
         }
 
+        let dayKeys = Set(grouped.keys)
+        daySortedBySize = daySortedBySize.filter { dayKeys.contains($0.key) }
+
         let daySections = grouped.keys.map { day in
-            DaySection(date: day, assetIDs: timeOrderedIDs(from: grouped[day, default: []]))
+            let ids = innerOrderedIDs(grouped[day, default: []], bySize: daySortedBySize[day] ?? false)
+            return DaySection(date: day, assetIDs: ids)
         }
         sections = sortedSections(daySections)
 
@@ -574,11 +603,34 @@ final class PhotoLibraryViewModel: NSObject, ObservableObject {
         sections = sortedSections(sections)
     }
 
-    /// Within a single day, newest first; ties break on ID (descending) so the
-    /// order is stable across rebuilds. Day contents never depend on `sortOrder`.
-    private func timeOrderedIDs(from rows: [AssetRow]) -> [String] {
-        rows.sorted { $0.date != $1.date ? $0.date > $1.date : $0.id > $1.id }
-            .map(\.id)
+    /// Whether the given day is currently sorted by size (for the header button).
+    func isDaySortedBySize(_ day: Date) -> Bool {
+        daySortedBySize[Calendar.current.startOfDay(for: day)] ?? false
+    }
+
+    /// Toggles one day between size-order and time-order, re-sorting just that
+    /// day's items in place (other days untouched). Uses cached sizes — no
+    /// device access. The choice survives rebuilds via `daySortedBySize`.
+    func toggleDaySizeSort(for day: Date) {
+        let key = Calendar.current.startOfDay(for: day)
+        let bySize = !(daySortedBySize[key] ?? false)
+        daySortedBySize[key] = bySize
+
+        guard let index = sections.firstIndex(where: { $0.date == key }) else { return }
+        let rows: [AssetRow] = sections[index].assetIDs.compactMap { id in
+            guard let item = itemByID[id] else { return nil }
+            return (id: id, date: Self.creationDate(for: item), size: item.fileSize)
+        }
+        sections[index] = DaySection(date: key, assetIDs: innerOrderedIDs(rows, bySize: bySize))
+    }
+
+    /// Orders a single day's rows: by size (large→small) when `bySize`, else by
+    /// time (newest first). Ties break on ID (descending) so the order is stable.
+    private func innerOrderedIDs(_ rows: [AssetRow], bySize: Bool) -> [String] {
+        let sorted = bySize
+            ? rows.sorted { $0.size != $1.size ? $0.size > $1.size : $0.id > $1.id }
+            : rows.sorted { $0.date != $1.date ? $0.date > $1.date : $0.id > $1.id }
+        return sorted.map(\.id)
     }
 
     /// Orders whole days per the current `sortOrder`. For size modes the day's
